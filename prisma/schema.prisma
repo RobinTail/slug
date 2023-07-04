@@ -1,23 +1,69 @@
+// ---------------------
+// Settings
+// ---------------------
+
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
+// ---------------------
+// App models
+// ---------------------
+
 model link {
-    id          Int      @id @default(autoincrement())
-    url         String   @db.Text
-    slug        String   @unique
+    id          Int         @id @default(autoincrement())
+    url         String      @db.Text
+    slug        String      @unique
     description String?
-    createdAt   DateTime @default(now())
-    createdBy   User?    @relation(fields: [creatorId], references: [id])
+    tag         tag?        @relation(fields: [tagId], references: [id])
+    tagId       Int?
+    bookmarks   bookmarks[]
+    createdAt   DateTime    @default(now())
+    createdBy   User?       @relation(fields: [creatorId], references: [id])
     creatorId   String
 
     @@index(slug)
+    @@index([creatorId])
+    @@index([tagId])
 }
+
+model tag {
+    id          Int         @id @default(autoincrement())
+    name        String      @unique
+    description String?
+    links       link[]
+    bookmarks   bookmarks[]
+    createdAt   DateTime    @default(now())
+    createdBy   User?       @relation(fields: [creatorId], references: [id])
+    creatorId   String
+
+    @@index([creatorId])
+}
+
+model bookmarks {
+    id        Int      @id @default(autoincrement())
+    link      link     @relation(fields: [linkId], references: [id])
+    linkId    Int
+    tag       tag?     @relation(fields: [tagId], references: [id])
+    tagId     Int?
+    createdAt DateTime @default(now())
+    createdBy User?    @relation(fields: [creatorId], references: [id])
+    creatorId String
+
+    @@index([linkId])
+    @@index([tagId])
+    @@index([creatorId])
+}
+
+// ---------------------
+// Auth models
+// ---------------------
 
 model Account {
     id                String  @id @default(cuid())
@@ -35,6 +81,7 @@ model Account {
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -43,18 +90,22 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String      @id @default(cuid())
     name          String?
     username      String?
-    email         String?   @unique
+    email         String?     @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
     links         link[]
+    tags          tag[]
+    bookmarks     bookmarks[]
 }
 
 model VerificationToken {
@@ -64,3 +115,5 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+// ---------------------
