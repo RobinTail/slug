@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { FiArrowUpRight } from "react-icons/fi";
+import { ArrowUpRight } from "lucide-react";
 
 interface LinkProps {
   href: string;
@@ -11,7 +11,7 @@ interface LinkProps {
 
 interface ExternalLinkProps extends LinkProps {
   externalIcon?: boolean;
-  underline?: boolean;
+  disableUnderline?: boolean;
 }
 
 const LinkRoute = (props: LinkProps) => {
@@ -29,15 +29,14 @@ const ExternalLink = (props: ExternalLinkProps) => {
       rel="noreferrer"
       target="_blank"
       className={cn(
-        props.underline && "underline",
-        "hover:underline",
+        props.disableUnderline ? "no-underline" : "hover:underline",
         props.className
       )}
     >
       <div className="flex items-center">
         {props.children}
         {props.externalIcon && (
-          <FiArrowUpRight className="ml-1" size={15} strokeWidth={2} />
+          <ArrowUpRight className="ml-1" size={13} strokeWidth={2} />
         )}
       </div>
     </a>
