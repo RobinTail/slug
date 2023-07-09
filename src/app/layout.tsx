@@ -5,11 +5,11 @@ import "@/styles/globals.css";
 import { cn } from "@/utils/cn";
 
 // Fonts:
-import localFont from "next/font/local";
-const interRoman = localFont({
-  variable: "--interRoman-font",
-  src: "../fonts/Inter-roman.var.woff2",
-  weight: "200 900",
+import { Inter } from "next/font/google";
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: "variable",
   display: "swap",
   preload: true,
 });
@@ -36,7 +36,7 @@ export default function RootLayout({
       <body
         className={cn(
           "bg-neutral-900 text-white antialiased",
-          `${interRoman.variable} font-sans`
+          `${inter.variable} font-sans`
         )}
       >
         <AuthProvider session={session}>{children}</AuthProvider>
