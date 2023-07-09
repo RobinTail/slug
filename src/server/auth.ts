@@ -5,23 +5,35 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
 import { env } from "@/env.mjs";
 import { prisma } from "@/server/db";
 
+// Providers:
+import GithubProvider from "next-auth/providers/github";
+
+// Extend types:
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
+  interface Session {
+    user?: {
       id: string;
+      username?: string | undefined;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    username?: string | undefined;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    user?: {
+      username: string | undefined;
     } & DefaultSession["user"];
   }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
+// Auth Options:
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: ({ session, user }) => ({
@@ -29,32 +41,37 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        username: user.username,
       },
     }),
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    GithubProvider({
+      clientId: env.GITHUB_ID || "",
+      clientSecret: env.GITHUB_CLIENT_SECRET || "",
+      profile(profile: {
+        avatar_url: string | null | undefined;
+        id: number;
+        name?: string | null;
+        username?: string;
+        email?: string | null;
+        image?: string | null;
+        login: string | undefined;
+      }) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name,
+          username: profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+        };
+      },
     }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
 };
 
-/**
- * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
- *
- * @see https://next-auth.js.org/configuration/nextjs
- */
+// Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file:
 export const getServerAuthSession = (ctx: {
   req: GetServerSidePropsContext["req"];
   res: GetServerSidePropsContext["res"];
