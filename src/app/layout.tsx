@@ -35,7 +35,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "bg-neutral-900 text-white antialiased",
+          "min-h-screen bg-neutral-900 text-white antialiased",
           `${inter.variable} font-sans`
         )}
       >
