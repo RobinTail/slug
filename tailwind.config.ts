@@ -11,7 +11,7 @@ export default {
   ],
   theme: {
     fontFamily: {
-      sans: ["var(--interRoman-font)", ...defaultTheme.fontFamily.sans],
+      sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
     },
     container: {
       center: true,
@@ -21,6 +21,9 @@ export default {
       },
     },
     extend: {
+      colors: {
+        midnight: "#0E0E0E",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -30,8 +33,17 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "background-shine": {
+          "from": {
+            "backgroundPosition": "0 0"
+          },
+          "to": {
+            "backgroundPosition": "-200% 0"
+          }
+        }
       },
       animation: {
+        "background-shine": "background-shine 2s linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
