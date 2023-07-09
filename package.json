@@ -13,7 +13,7 @@
     "studio": "prisma studio",
     "dbpush": "prisma db push",
     "generate": "prisma generate",
-    "check": "npm run lint && tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "1.0.7",
