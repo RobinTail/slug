@@ -15,7 +15,6 @@ import GithubProvider from "next-auth/providers/github";
 declare module "next-auth" {
   interface Session {
     user?: {
-      id: string;
       username?: string | undefined;
     } & DefaultSession["user"];
   }
@@ -35,6 +34,9 @@ declare module "next-auth/jwt" {
 
 // Auth Options:
 export const authOptions: NextAuthOptions = {
+  // Main Adapter & Session:
+  adapter: PrismaAdapter(prisma),
+  // Callbacks:
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
@@ -44,15 +46,19 @@ export const authOptions: NextAuthOptions = {
         username: user.username,
       },
     }),
+    // Redirect to "/" after sign in:
+    redirect() {
+      return "/";
+    },
   },
-  adapter: PrismaAdapter(prisma),
+  // Providers:
   providers: [
     GithubProvider({
       clientId: env.GITHUB_ID || "",
       clientSecret: env.GITHUB_CLIENT_SECRET || "",
       profile(profile: {
-        avatar_url: string | null | undefined;
         id: number;
+        avatar_url: string | null | undefined;
         name?: string | null;
         username?: string;
         email?: string | null;
@@ -69,6 +75,10 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  // Pages:
+  pages: {
+    signIn: "/sign-in",
+  },
 };
 
 // Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file:
@@ -78,3 +88,5 @@ export const getServerAuthSession = (ctx: {
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };
+
+export const getAuthSession = () => getServerSession(authOptions);
