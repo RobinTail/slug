@@ -21,7 +21,7 @@ export const metadata = {
 };
 
 // Providers:
-import { AuthProvider } from "@/providers";
+import { AuthProvider, SonnerProvider } from "@/providers";
 
 // App layout:
 export default function RootLayout({
@@ -40,6 +40,7 @@ export default function RootLayout({
         )}
       >
         <AuthProvider session={session}>{children}</AuthProvider>
+        <SonnerProvider />
       </body>
     </html>
   );

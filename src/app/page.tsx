@@ -6,10 +6,11 @@ import Navbar from "@/components/navbar";
 import { ExternalLink, Link } from "@/ui/link";
 import { buttonVariants } from "@/ui/button";
 import { Star, ArrowRight } from "lucide-react";
+import GridBackground from "@/components/gridBackground";
 
 export default function Home() {
   return (
-    <div className="bg-[url('/img/grid.svg')] min-h-screen">
+    <GridBackground>
       <HomeContainer>
         <Navbar />
         <BlurBackground>
@@ -32,7 +33,7 @@ export default function Home() {
             </div>
           </ExternalLink>
           <Link
-            href="/login"
+            href="/sign-in"
             className={buttonVariants({ variant: "primary" })}
           >
             <div className="flex items-center space-x-1">
@@ -43,6 +44,6 @@ export default function Home() {
         </div>
         <Footer />
       </HomeContainer>
-    </div>
+    </GridBackground>
   );
 }
