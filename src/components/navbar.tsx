@@ -3,6 +3,7 @@ import React from "react";
 import Logo from "./logo";
 import { Badge } from "@/ui/badge";
 import { GithubIcon, HeartIcon, TwitterIcon } from "lucide-react";
+import UserProfileMenu from "./auth/userProfileMenu";
 
 const Navbar = () => {
   return (
@@ -36,6 +37,7 @@ const Navbar = () => {
               className="text-neutral-300 duration-100 hover:text-red-300"
             />
           </ExternalLink>
+          {/* <UserProfileMenu /> */}
         </div>
       </div>
     </nav>
