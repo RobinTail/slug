@@ -1,15 +1,17 @@
-import { ExternalLink, Link } from "@/ui/link";
-import React from "react";
+import { getAuthSession } from "@/server/auth";
+
 import Logo from "./logo";
-import { Badge } from "@/ui/badge";
 import { GithubIcon, HeartIcon, TwitterIcon } from "lucide-react";
-import UserProfileMenu from "./auth/userProfileMenu";
+import { ExternalLink, Link } from "@/ui/link";
+import { Badge } from "@/ui/badge";
 import { cn } from "@/utils/cn";
+import AuthMenu from "./auth/menu";
 
 export const navbarIconClasses =
   "text-neutral-300 duration-100 hover:text-gray-200";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await getAuthSession();
   return (
     <nav className="sticky top-0 w-full bg-transparent pb-3">
       <div className="container my-5 flex items-center justify-between">
@@ -36,9 +38,21 @@ const Navbar = () => {
             />
           </ExternalLink>
           <ExternalLink href="https://github.com/sponsors/pheralb">
-            <HeartIcon size={20} className={cn(navbarIconClasses, "hover:text-red-200")} />
+            <HeartIcon
+              size={20}
+              className={cn(navbarIconClasses, "hover:text-red-200")}
+            />
           </ExternalLink>
-          <UserProfileMenu />
+          {session ? (
+            <AuthMenu session={session} />
+          ) : (
+            <Link
+              href="/sign-in"
+              className="text-neutral-300 duration-100 hover:text-white"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </nav>
