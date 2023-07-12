@@ -4,6 +4,10 @@ import Logo from "./logo";
 import { Badge } from "@/ui/badge";
 import { GithubIcon, HeartIcon, TwitterIcon } from "lucide-react";
 import UserProfileMenu from "./auth/userProfileMenu";
+import { cn } from "@/utils/cn";
+
+export const navbarIconClasses =
+  "text-neutral-300 duration-100 hover:text-gray-200";
 
 const Navbar = () => {
   return (
@@ -22,22 +26,19 @@ const Navbar = () => {
           <ExternalLink href="https://github.com/pheralb/slug">
             <GithubIcon
               size={20}
-              className="text-neutral-300 duration-100 hover:text-gray-200"
+              className={cn(navbarIconClasses, "hover:text-gray-200")}
             />
           </ExternalLink>
           <ExternalLink href="https://twitter.com/pheralb_">
             <TwitterIcon
               size={20}
-              className="text-neutral-300 duration-100 hover:text-blue-300"
+              className={cn(navbarIconClasses, "hover:text-blue-200")}
             />
           </ExternalLink>
           <ExternalLink href="https://github.com/sponsors/pheralb">
-            <HeartIcon
-              size={20}
-              className="text-neutral-300 duration-100 hover:text-red-300"
-            />
+            <HeartIcon size={20} className={cn(navbarIconClasses, "hover:text-red-200")} />
           </ExternalLink>
-          {/* <UserProfileMenu /> */}
+          <UserProfileMenu />
         </div>
       </div>
     </nav>

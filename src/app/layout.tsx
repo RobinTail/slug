@@ -32,7 +32,7 @@ export default function RootLayout({
   session: Session | null;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={cn(
           "min-h-screen bg-neutral-900 text-white antialiased",
